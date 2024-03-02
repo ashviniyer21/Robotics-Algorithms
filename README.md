@@ -1,10 +1,10 @@
 # Robotics Algorithms
 A bunch of cool robotics algorithms
 ## Implemented Algorithsm
-
-## Algorithms to Implement
 - Motion Planning
   - A*
+## Algorithms to Implement
+- Motion Planning
   - D*
   - RRT*
   - PRM
