@@ -89,15 +89,15 @@ def astar(start, goal, grid, heuristic):
 
     return []
 
-def diagonal_heuristic(node, goal):
+def manhattan_heuristic(node, goal):
     """Heuristic for diagonal distance"""
 
     dx = abs(node[0] - goal[0])
     dy = abs(node[1] - goal[1])
-    return (dx + dy)
+    return dx + dy
 
 if __name__ == '__main__':
     grid = Grid(20, 20)
     start = grid.find_random_free_space()
     goal = grid.find_random_free_space()
-    astar(start, goal, grid, diagonal_heuristic)
+    astar(start, goal, grid, manhattan_heuristic)
