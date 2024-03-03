@@ -1,6 +1,6 @@
 # Robotics Algorithms
 A bunch of cool robotics algorithms
-## Implemented Algorithsm
+## Implemented Algorithms
 - Motion Planning
   - A*
 ## Algorithms to Implement
