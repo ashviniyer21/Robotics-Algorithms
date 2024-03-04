@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
-from helper.grid import Grid
+from planning.helper.grid import Grid
 
 def visualize_astar(start, goal, grid, prev_nodes, nodes, highlights=None):
     """Visualizes A* algorithm at a given step"""
@@ -97,7 +97,7 @@ def manhattan_heuristic(node, goal):
     return dx + dy
 
 if __name__ == '__main__':
-    grid = Grid(20, 20)
+    grid = Grid(50, 50)
     start = grid.find_random_free_space()
     goal = grid.find_random_free_space()
     astar(start, goal, grid, manhattan_heuristic)
