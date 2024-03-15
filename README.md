@@ -3,6 +3,8 @@ A bunch of cool robotics algorithms
 ## Implemented Algorithms
 - Motion Planning
   - A*
+- Controls
+  - PID
 - Localization
   - Extended Kalman Filter
 ## Algorithms to Implement
@@ -11,7 +13,6 @@ A bunch of cool robotics algorithms
   - RRT*
   - PRM
 - Controls
-  - PID
   - LQR
   - MPC
 - Perception
