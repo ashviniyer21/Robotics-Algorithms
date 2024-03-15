@@ -46,7 +46,6 @@ if __name__ == "__main__":
             action = 1
         else:
             action = 0
-        print(angle, observation[3])
 
         if terminated or truncated:
             observation, info = env.reset()
