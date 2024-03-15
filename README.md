@@ -3,6 +3,8 @@ A bunch of cool robotics algorithms
 ## Implemented Algorithms
 - Motion Planning
   - A*
+- Localization
+  - Extended Kalman Filter
 ## Algorithms to Implement
 - Motion Planning
   - D*
@@ -16,8 +18,6 @@ A bunch of cool robotics algorithms
   - ICP
   - CNN
 - Localization / SLAM
-  - Kalman Filter
-  - Extended Kalman Filter
   - Particle Filter (Monte Carlo Localization)
   - EKF SLAM
   - Pose Graph SLAM
