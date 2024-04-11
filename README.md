@@ -4,9 +4,12 @@ A bunch of cool robotics algorithms
 - Motion Planning
   - A*
 - Controls
-  - PID
+  - PID (Proportional Integral Derivative)
 - Localization
-  - Extended Kalman Filter
+  - EKF (Extended Kalman Filter)
+- Perception
+  - ICP (Iterative Closest Point)
+    - Improvements to make: Use Point-to-plane & iterative least squares
 ## Algorithms to Implement
 - Motion Planning
   - D*
@@ -16,7 +19,6 @@ A bunch of cool robotics algorithms
   - LQR
   - MPC
 - Perception
-  - ICP
   - CNN
 - Localization / SLAM
   - Particle Filter (Monte Carlo Localization)
