@@ -3,10 +3,11 @@
    Robot also has observed landmarks it can always see
    Obseveration Model is (range, theta) distance between robot and landmark"""
 
+import tkinter as tk
 import numpy as np
-from localization.simulation.motion_model import PointMass2DMotionModel
-from localization.simulation.observation_model import RangeBearingModel
-import utils.utils as utils
+from simulation.motion_model import PointMass2DMotionModel
+from simulation.observation_model import RangeBearingModel
+# import utils.utils as utils
 
 def motion_update(prev_state, control, dt):
     """Motion Model For point mass robot"""
@@ -73,32 +74,63 @@ def ekf_update(prev_state, prev_variance, control, observation, landmarks, motio
 
     return new_state, new_variance
 
+def visualize_ekf(current_state, predicted_state, landmarks):
+    """Function to visualize EKF"""
+
+    window = tk.Tk()
+    window.geometry('700x700')
+
+    canvas = tk.Canvas(window, width=600, height=600)
+    canvas.pack()
+
+    for landmark in landmarks:
+        landmark_viz = 30 * (landmark + 10)
+        x0 = landmark_viz[0]
+        y0 = landmark_viz[1]
+        canvas.create_oval(x0 - 5, y0 - 5, x0 + 5, y0 + 5, fill='red')
+    current_state_coord = 30 * (current_state[0:2] + 10)
+    real_points = [current_state_coord + [10, 0], current_state_coord + [-6, 8], current_state_coord + [-6, -8]]
+    for i in range(len(real_points)):
+        real_point_t = real_points[i]
+        real_point_t -= current_state_coord
+        cos_ang = np.cos(current_state[2])
+        sin_ang = np.sin(current_state[2])
+        real_point_t = [real_point_t[0] * cos_ang - real_point_t[1] * sin_ang, 
+                        real_point_t[1] * cos_ang + real_point_t[0] * sin_ang]
+        real_point_t += current_state_coord
+        real_points[i] = real_point_t
+    print(real_points)
+    canvas.create_polygon(tuple(np.array(real_points).flatten()), fill='blue')
+    # window.after(10)
+    window.mainloop()
+
+
 if __name__ == "__main__":
     start_state = np.array([0, 0, 0])
     lin_var = np.array([
         [1, 0],
         [0, 0]
-    ]) * 0.05
+    ]) * 0.01
     ang_var = np.array([
         [0, 0],
-        [0, 1]
-    ]) * 0.05
+        [0, 0.1]
+    ]) * 0.01
     const_var = np.array([
         [1, 0],
-        [0, 1]
-    ]) * 0.05
+        [0, 0.1]
+    ]) * 0.01
 
     obs_var = np.array([
         [1, 0],
-        [0, 1]
-    ]) * 0.05
+        [0, 0.1]
+    ]) * 0.01
 
     landmarks = np.random.uniform(-10, 10, (10, 2))
 
     mot_model = PointMass2DMotionModel(lin_var, ang_var, const_var)
     obs_model = RangeBearingModel(obs_var)
 
-    DT = 0.02
+    DT = 0.05
 
     time = 0
 
@@ -118,4 +150,6 @@ if __name__ == "__main__":
         pred_state, pred_var = ekf_update(pred_state, pred_var, control, observation, landmarks,
                                           motion_var, total_obs_var, DT)
 
+        visualize_ekf(state, pred_state, landmarks)
         time += DT
+        print("State: ", state, " Predicted State: ", pred_state)
