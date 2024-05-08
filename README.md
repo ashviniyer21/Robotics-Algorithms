@@ -5,6 +5,7 @@ A bunch of cool robotics algorithms
   - A*
 - Controls
   - PID (Proportional Integral Derivative)
+  - LQR (Linear Quadratic Regulator)
 - Localization
   - EKF (Extended Kalman Filter)
 - Perception
@@ -16,7 +17,6 @@ A bunch of cool robotics algorithms
   - RRT*
   - PRM
 - Controls
-  - LQR
   - MPC
 - Perception
   - CNN
