@@ -1,17 +1,26 @@
+"""
+Python file to run and visualize RRT* Planner
+Code below assumes Circular obstacles, collision functions can be changed to accomodate for others
+"""
+
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import copy
 
 def get_dist(point1, point2):
+    """Computes the distance between 2 points"""
     return np.linalg.norm(point1 - point2)
 
 def get_random_point(bounds):
+    """Generates a random point within bounds"""
     x_point = np.random.uniform(bounds[0][0], bounds[0][1])
     y_point = np.random.uniform(bounds[1][0], bounds[1][1])
     return np.array([x_point, y_point])
 
 def get_nearest_neighbor(point, nodes):
+    """Finds the nearest node in tree to new point"""
     idx = 0
     min_dist = get_dist(nodes[0], point)
     for i in range(1, len(nodes)):
@@ -22,6 +31,7 @@ def get_nearest_neighbor(point, nodes):
     return (idx, min_dist)
 
 def bound_point_dist(point, neighbor, max_range):
+    """Finds point in same direction as generated point within some maximum radius"""
     curr_dist = get_dist(point, neighbor)
     if curr_dist > max_range:
         direction_vec = (point - neighbor) / curr_dist * max_range
@@ -29,6 +39,7 @@ def bound_point_dist(point, neighbor, max_range):
     return point
 
 def check_in_obstacle(point, obstacles):
+    """Checks if a point lies in an obstacle"""
     for obstacle in obstacles:
         x, y, radius = obstacle
         if get_dist(point, np.array([x, y])) < radius:
@@ -36,6 +47,7 @@ def check_in_obstacle(point, obstacles):
     return False
 
 def check_intersection(point1, point2, obstacle):
+    """Checks if path between 2 points goes through obstacle"""
     #Obstacle: (c_x, c_y, rad)
     c_x, c_y, r = obstacle
     x1 = point1[0]
@@ -55,19 +67,22 @@ def check_intersection(point1, point2, obstacle):
     return (0 <= pos_root <= 1) or (0 <= neg_root <= 1)
 
 def check_intersections(point1, point2, obstacles):
+    """Checks if path between 2 points goes through any obstacle"""
     for obstacle in obstacles:
         if check_intersection(point1, point2, obstacle):
             return True
     return False
 
 def find_neighbors(point, nodes, max_dist):
+    """Finds all neighbors within a certain radius"""
     neighbors = []
     for i in range(len(nodes)):
         if get_dist(point, nodes[i]) <= max_dist:
             neighbors.append(i)
     return neighbors
 
-def plot(start, goal, parents, nodes, obstacles, bounds, path=[]):
+def plot(goal, parents, nodes, obstacles, bounds, path=[]):
+    """Plots RRT* tree"""
     g = nx.Graph()
     for i in range(len(parents) + 1):
         g.add_node(i)
@@ -95,11 +110,15 @@ def plot(start, goal, parents, nodes, obstacles, bounds, path=[]):
     plt.show()
 
 def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [0, 10]]):
+    """Runs RRT* algorithm"""
     nodes = [start]
     costs = [0]
     parents = [-1]
     T_new = 0
+    # Checking if node is close enough to goal
     while get_dist(nodes[T_new], goal) > threshold or check_intersections(nodes[T_new], goal, obstacles):
+        
+        #Generating new node & checking if it is a valid node
         random_point = get_random_point(bounds)
         neighbor_idx, neighbor_dist = get_nearest_neighbor(random_point, nodes)
         random_point = bound_point_dist(random_point, nodes[neighbor_idx], max_range)
@@ -109,17 +128,20 @@ def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [
     
         neighbors = find_neighbors(random_point, nodes, max_range)
 
+        # Adding node to tree
         nodes.append(random_point)
         T_new += 1
         parents.append(neighbor_idx)
         costs.append(neighbor_dist + costs[neighbor_idx])
+
+        #Rewiring nearby nodes through new node if it makes sense
 
         for neighbor in neighbors:
             if costs[T_new] + get_dist(random_point, nodes[neighbor]) < costs[neighbor]:
                 if not check_intersections(random_point, nodes[neighbor], obstacles):
                     costs[neighbor] = costs[T_new] + get_dist(random_point, nodes[neighbor])
                     parents[neighbor] = T_new
-        plot(start, goal, parents, nodes, obstacles, bounds)
+        plot(goal, parents, nodes, obstacles, bounds)
     nodes.append(goal)
     parents.append(T_new)
     costs.append(costs[T_new] + get_dist(goal, nodes[T_new]))
@@ -132,20 +154,27 @@ def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [
         path.append(nodes[path_idx])
         viz_path.append(path_idx)
         path_idx = parents[path_idx]
-    plot(start, goal, parents, nodes, obstacles, bounds, viz_path)
+    plot(goal, parents, nodes, obstacles, bounds, viz_path)
     return path
 
 if __name__ == "__main__":
+    """Main function for running RRT*"""
+
     bounds=[[0, 10], [0, 10]]
+    #Generating obstacles
     obstacles = []
     for i in range(30):
         center = get_random_point(bounds)
         radius = np.random.uniform(0.1, 1)
         obstacles.append((center[0], center[1], radius))
+
+    #Generating start / end
     start = get_random_point(bounds)
     while check_in_obstacle(start, obstacles):
         start = get_random_point(bounds)
     goal = get_random_point(bounds)
     while check_in_obstacle(goal, obstacles):
         goal = get_random_point(bounds)
+    
+    #Running RRT*
     print(rrtstar(start, goal, obstacles))
