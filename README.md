@@ -3,6 +3,7 @@ A bunch of cool robotics algorithms
 ## Implemented Algorithms
 - Motion Planning
   - A*
+  - RRT* (Rapidly-Exploring Random Tree Star)
 - Controls
   - PID (Proportional Integral Derivative)
   - LQR (Linear Quadratic Regulator)
@@ -14,7 +15,6 @@ A bunch of cool robotics algorithms
 ## Algorithms to Implement
 - Motion Planning
   - D*
-  - RRT*
   - PRM
 - Controls
   - MPC
