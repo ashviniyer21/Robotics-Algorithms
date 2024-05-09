@@ -104,7 +104,7 @@ def plot(goal, parents, nodes, obstacles, bounds, path=[]):
         circle=plt.Circle((obstacle[0],obstacle[1]),obstacle[2])
         ax.add_patch(circle)
 
-    nx.draw(g, pos=pos, node_color = color_map, node_size=100)
+    nx.draw(g, pos=pos, node_color = color_map, node_size=25)
     plt.xlim(bounds[0][0], bounds[0][1])
     plt.ylim(bounds[1][0], bounds[1][1])
     plt.show()
@@ -116,7 +116,7 @@ def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [
     parents = [-1]
     T_new = 0
     # Checking if node is close enough to goal
-    while get_dist(nodes[T_new], goal) > threshold or check_intersections(nodes[T_new], goal, obstacles):
+    for i in range(1000):
         
         #Generating new node & checking if it is a valid node
         random_point = get_random_point(bounds)
@@ -134,19 +134,25 @@ def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [
         parents.append(neighbor_idx)
         costs.append(neighbor_dist + costs[neighbor_idx])
 
-        #Rewiring nearby nodes through new node if it makes sense
-
         for neighbor in neighbors:
             if costs[T_new] + get_dist(random_point, nodes[neighbor]) < costs[neighbor]:
                 if not check_intersections(random_point, nodes[neighbor], obstacles):
                     costs[neighbor] = costs[T_new] + get_dist(random_point, nodes[neighbor])
                     parents[neighbor] = T_new
-        plot(goal, parents, nodes, obstacles, bounds)
-    nodes.append(goal)
-    parents.append(T_new)
-    costs.append(costs[T_new] + get_dist(goal, nodes[T_new]))
+
+        # plot(goal, parents, nodes, obstacles, bounds)
+
+        #Rewiring nearby nodes through new node if it makes sense
     
-    path_idx = T_new + 1
+    neighbor_idx, neighbor_dist = get_nearest_neighbor(goal, nodes)
+    if check_intersections(nodes[neighbor_idx], goal, obstacles):
+        print("Cannot find path")
+        return None
+    T_new += 1
+    nodes.append(goal)
+    parents.append(neighbor_idx)
+    costs.append(costs[neighbor_idx] + neighbor_dist)
+    path_idx = T_new
     # Recovering nodes to traverse backwards
     path = []
     viz_path = []
@@ -176,5 +182,4 @@ if __name__ == "__main__":
     while check_in_obstacle(goal, obstacles):
         goal = get_random_point(bounds)
     
-    #Running RRT*
-    print(rrtstar(start, goal, obstacles))
+    rrtstar(start, goal, obstacles)
