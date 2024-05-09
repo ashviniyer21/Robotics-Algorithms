@@ -49,10 +49,10 @@ def lqr(angles, vel, goal, dt, Q, R, iters=100, lens=np.array([0.1, 0.1]), mass=
 
 
 if __name__ == "__main__":
-    DT = 0.02
+    DT = 0.01
     GOAL = 0
 
-    env = gym.make('Reacher-v4', render_mode="human", max_episode_steps=500)
+    env = gym.make('Reacher-v4', render_mode="human", max_episode_steps=250)
     observation, info = env.reset()
     action = [0, 0]
     for _ in range(1000):
