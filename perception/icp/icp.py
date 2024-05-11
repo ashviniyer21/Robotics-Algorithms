@@ -10,12 +10,6 @@ def generate_random_points(num, low, high):
 
 """Uses closest point correspondence w/ kd-tree"""
 def find_correspondences(points1, points2):
-    #Shifting center of mass of points
-    # points1mean = np.mean(points1, axis=0)
-    # points2mean = np.mean(points2, axis=0)
-    # for i in range(points1.shape[0]):
-    #     points1[i] += points2mean - points1mean
-    
     kd_tree = KDTree(points2, 5)
     correspondences = []
     error = 0
@@ -61,7 +55,6 @@ def icp(points1, points2, threshold=0.01):
     error = np.inf
     while error > threshold:
         correspondences, new_error = find_correspondences(points1, points2)
-        print(new_error)
         if new_error < threshold or new_error > error:
              break
         error = new_error
@@ -72,7 +65,7 @@ def icp(points1, points2, threshold=0.01):
 
 if __name__ == "__main__":
     points1 = generate_random_points(10, [0, 0], [10, 10])
-    points2 = generate_random_points(10, [10, 10], [20, 20])
+    points2 = generate_random_points(10, [5, 5], [15, 15])
     plt.scatter(points1[:,0], points1[:,1], c='blue')
     plt.scatter(points2[:,0], points2[:,1], c='red')
     points1 = icp(points1, points2)
