@@ -9,6 +9,7 @@ A bunch of cool robotics algorithms
   - LQR (Linear Quadratic Regulator)
 - Localization
   - EKF (Extended Kalman Filter)
+  - Particle Filter (Monte Carlo Localization)
 - Perception
   - ICP (Iterative Closest Point)
     - Improvements to make: Use Point-to-plane & iterative least squares
@@ -21,6 +22,5 @@ A bunch of cool robotics algorithms
 - Perception
   - CNN
 - Localization / SLAM
-  - Particle Filter (Monte Carlo Localization)
   - EKF SLAM
   - Pose Graph SLAM
