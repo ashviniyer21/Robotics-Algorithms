@@ -104,19 +104,19 @@ def plot(goal, parents, nodes, obstacles, bounds, path=[]):
         circle=plt.Circle((obstacle[0],obstacle[1]),obstacle[2])
         ax.add_patch(circle)
 
-    nx.draw(g, pos=pos, node_color = color_map, node_size=25)
+    nx.draw(g, pos=pos, node_color = color_map, node_size=10)
     plt.xlim(bounds[0][0], bounds[0][1])
     plt.ylim(bounds[1][0], bounds[1][1])
     plt.show()
 
-def rrtstar(start, goal, obstacles, max_range=2, threshold=2, bounds=[[0, 10], [0, 10]]):
+def rrtstar(start, goal, obstacles, max_range=2, iters=100, bounds=[[0, 10], [0, 10]]):
     """Runs RRT* algorithm"""
     nodes = [start]
     costs = [0]
     parents = [-1]
     T_new = 0
     # Checking if node is close enough to goal
-    for i in range(1000):
+    for i in range(iters):
         
         #Generating new node & checking if it is a valid node
         random_point = get_random_point(bounds)

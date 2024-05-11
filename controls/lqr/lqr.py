@@ -64,14 +64,14 @@ if __name__ == "__main__":
         vels = np.array([vel0, vel1])
         target = np.array([targetx, targety])
         Q = np.array([
-            [10, 0, 0, 0],
-            [0, 10, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
+            [100, 0, 0, 0],
+            [0, 100, 0, 0],
+            [0, 0, 50, 0],
+            [0, 0, 0, 50]
         ])
         R = np.array([
-            [0.1, 0],
-            [0, 0.1]
+            [0.01, 0],
+            [0, 0.01]
         ])
         action = lqr(angles, vels, target, DT, Q, R)
         if terminated or truncated:

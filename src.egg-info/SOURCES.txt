@@ -2,6 +2,11 @@ README.md
 setup.py
 controls/__init__.py
 localization/__init__.py
+localization/particle_filter/__init__.py
+localization/particle_filter/particle_filter.py
+localization/simulation/__init__.py
+localization/simulation/motion_model.py
+localization/simulation/observation_model.py
 perception/__init__.py
 perception/helper/__init__.py
 perception/helper/kd_tree.py
