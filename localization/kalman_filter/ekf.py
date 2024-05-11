@@ -3,10 +3,10 @@
    Robot also has observed landmarks it can always see
    Obseveration Model is (range, theta) distance between robot and landmark"""
 
-import tkinter as tk
 import numpy as np
 from simulation.motion_model import PointMass2DMotionModel
 from simulation.observation_model import RangeBearingModel
+import tkinter as tk
 # import utils.utils as utils
 
 def motion_update(prev_state, control, dt):
