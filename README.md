@@ -17,6 +17,7 @@ A bunch of cool robotics algorithms
 - Motion Planning
   - D*
   - PRM
+  - Hybrid A*
 - Controls
   - MPC
 - Perception
