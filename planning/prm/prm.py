@@ -1,6 +1,7 @@
 """
-Python file to run and visualize RRT* Planner
+Python file to run and visualize PRM Planner
 Code below assumes Circular obstacles, collision functions can be changed to accomodate for others
+Only generates PRM graph, paths can be found using Dijkstra's / A*
 """
 
 
@@ -81,22 +82,22 @@ def find_neighbors(point, nodes, max_dist):
             neighbors.append(i)
     return neighbors
 
-def plot(goal, parents, nodes, obstacles, bounds, path=[]):
-    """Plots RRT* tree"""
+def plot(nodes, edges, obstacles, bounds, path=[]):
+    """Plots PRM graph"""
     g = nx.Graph()
-    for i in range(len(parents) + 1):
+    for i in range(len(nodes)):
         g.add_node(i)
-    for i in range(1, len(parents)):
-        g.add_edge(i, parents[i])
+    for i in range(len(edges)):
+        for j in range(len(edges[i])):
+            g.add_edge(i, edges[i][j])
     pos = copy.deepcopy(nodes)
-    pos.append(goal)
-    color_map = ["blue"] * len(pos)
-    color_map[len(nodes) - 1] = "orange"
+    color_map = ["blue"] * len(nodes)
 
     for p in path:
         color_map[p] = "purple"
-    color_map[0] = "red"
-    color_map[len(nodes)] = "green"
+    if len(path) > 0:
+        color_map[path[0]] = "red"
+        color_map[path[-1]] = "green"
 
     fig, ax = plt.subplots()
 
@@ -109,64 +110,35 @@ def plot(goal, parents, nodes, obstacles, bounds, path=[]):
     plt.ylim(bounds[1][0], bounds[1][1])
     plt.show()
 
-def rrtstar(start, goal, obstacles, max_range=2, iters=100, bounds=[[0, 10], [0, 10]]):
-    """Runs RRT* algorithm"""
-    nodes = [start]
-    costs = [0]
-    parents = [-1]
-    T_new = 0
+def prm(obstacles, max_range=2, iters=1000, bounds=[[0, 10], [0, 10]]):
+    """Runs PRM algorithm"""
+    nodes = []
+    edges = []
+    T_new = -1
     
     # Checking if node is close enough to goal
     for i in range(iters):
         
         #Generating new node & checking if it is a valid node
         random_point = get_random_point(bounds)
-        neighbor_idx, neighbor_dist = get_nearest_neighbor(random_point, nodes)
-        random_point = bound_point_dist(random_point, nodes[neighbor_idx], max_range)
-        neighbor_idx, neighbor_dist = get_nearest_neighbor(random_point, nodes)
-        if check_intersections(nodes[neighbor_idx], random_point, obstacles):
+        if check_in_obstacle(random_point, obstacles):
             continue
     
         neighbors = find_neighbors(random_point, nodes, max_range)
 
-        # Adding node to tree
+        # Adding node to graph
         nodes.append(random_point)
+        edges.append([])
         T_new += 1
-        parents.append(neighbor_idx)
-        costs.append(neighbor_dist + costs[neighbor_idx])
 
         for neighbor in neighbors:
-            if costs[T_new] + get_dist(random_point, nodes[neighbor]) < costs[neighbor]:
-                if not check_intersections(random_point, nodes[neighbor], obstacles):
-                    costs[neighbor] = costs[T_new] + get_dist(random_point, nodes[neighbor])
-                    parents[neighbor] = T_new
-
-        # plot(goal, parents, nodes, obstacles, bounds)
-
-        #Rewiring nearby nodes through new node if it makes sense
-    
-    neighbor_idx, neighbor_dist = get_nearest_neighbor(goal, nodes)
-    if check_intersections(nodes[neighbor_idx], goal, obstacles):
-        print("Cannot find path")
-        return None
-    T_new += 1
-    nodes.append(goal)
-    parents.append(neighbor_idx)
-    costs.append(costs[neighbor_idx] + neighbor_dist)
-    path_idx = T_new
-    # Recovering nodes to traverse backwards
-    path = []
-    viz_path = []
-    while path_idx != -1:
-        path.append(nodes[path_idx])
-        viz_path.append(path_idx)
-        path_idx = parents[path_idx]
-    plot(goal, parents, nodes, obstacles, bounds, viz_path)
-    return path
+            if not check_intersections(nodes[neighbor], random_point, obstacles):
+                edges[neighbor].append(T_new)
+                edges[T_new].append(neighbor)
+    return nodes, edges
 
 if __name__ == "__main__":
-    """Main function for running RRT*"""
-
+    """Main function for running PRM"""
     bounds=[[0, 10], [0, 10]]
     #Generating obstacles
     obstacles = []
@@ -174,13 +146,7 @@ if __name__ == "__main__":
         center = get_random_point(bounds)
         radius = np.random.uniform(0.1, 1)
         obstacles.append((center[0], center[1], radius))
-
-    #Generating start / end
-    start = get_random_point(bounds)
-    while check_in_obstacle(start, obstacles):
-        start = get_random_point(bounds)
-    goal = get_random_point(bounds)
-    while check_in_obstacle(goal, obstacles):
-        goal = get_random_point(bounds)
     
-    rrtstar(start, goal, obstacles)
+    nodes, edges = prm(obstacles, bounds=bounds)
+    plot(nodes, edges, obstacles, bounds)
+    #Generating start / end
