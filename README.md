@@ -13,4 +13,3 @@ A bunch of cool robotics algorithms
   - Particle Filter (Monte Carlo Localization)
 - Perception
   - ICP (Iterative Closest Point)
-    - Improvements to make: Use Point-to-plane & iterative least squares
