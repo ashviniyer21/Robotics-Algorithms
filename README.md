@@ -1,15 +1,13 @@
 # Robotics Algorithms
 A bunch of cool robotics algorithms
 ## Implemented Algorithms
-- Motion Planning
-  - A*
-  - RRT* (Rapidly-Exploring Random Tree Star)
-  - PRM
-- Controls
-  - PID (Proportional Integral Derivative)
-  - LQR (Linear Quadratic Regulator)
-- Localization
-  - EKF (Extended Kalman Filter)
-  - Particle Filter (Monte Carlo Localization)
-- Perception
-  - ICP (Iterative Closest Point)
+- A*
+- RRT* (Rapidly-Exploring Random Tree Star)
+- PRM
+- Potential Field
+- Cell Decomposition
+- PID (Proportional Integral Derivative)
+- LQR (Linear Quadratic Regulator)
+- EKF (Extended Kalman Filter)
+- Particle Filter (Monte Carlo Localization)
+- ICP (Iterative Closest Point)
