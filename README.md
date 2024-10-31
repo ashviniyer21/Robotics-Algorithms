@@ -2,7 +2,7 @@
 A bunch of cool algorithms commonly used in robotics applications
 ## Implemented Algorithms
 - A*
-- RRT* (Rapidly-Exploring Random Tree Star)
+- RRT* (Rapidly-Exploring Random Tree)
 - PRM
 - Potential Field
 - Cell Decomposition
