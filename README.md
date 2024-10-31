@@ -1,5 +1,5 @@
 # Robotics Algorithms
-A bunch of cool robotics algorithms
+A bunch of cool algorithms commonly used in robotics applications
 ## Implemented Algorithms
 - A*
 - RRT* (Rapidly-Exploring Random Tree Star)
